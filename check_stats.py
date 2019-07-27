@@ -1,15 +1,15 @@
 import argparse
 import logging
 import os
-from PIL import ImageGrab, Image
 import cv2
 import pytesseract
 import re
 from bs4 import BeautifulSoup
 from urllib.request import Request, urlopen
-import numpy
 import pandas as pd
 import matplotlib.pyplot as plt
+import pyautogui
+import numpy
 
 logging.basicConfig(level=logging.ERROR)
 logger = logging.getLogger(__name__)
@@ -34,6 +34,9 @@ def get_users(image):
 
 def clean_image(image, preprocess):
 
+    cv2.imshow("Image", image)
+    cv2.waitKey(0)
+
     # convert to grayscale
     clean = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
@@ -53,8 +56,8 @@ def clean_image(image, preprocess):
     clean = cv2.copyMakeBorder(clean, border, border, border, border, cv2.BORDER_CONSTANT, None, [255,255,255])
 
     # show the output image
-    # cv2.imshow("Image", image)
     cv2.imshow("Output", clean)
+    cv2.waitKey(0)
 
     return clean
 
@@ -117,11 +120,13 @@ if __name__ == '__main__':
     args = parser.parse_args()
     print(args)
 
-    # load the minecraft screenshot from existing file (if specified) or clipboard
+    # load the minecraft screenshot from existing file (if specified) or grab screen
     if args.input:
         raw = cv2.imread(args.input)
     else:
-        raw = ImageGrab.grab()
+        #raw = ImageGrab.grab()
+        raw = pyautogui.screenshot()
+        raw.save("screenshot.png")
         raw = cv2.cvtColor(numpy.array(raw), cv2.COLOR_RGB2BGR)
 
     clean = clean_image(raw, args.preprocess)
