@@ -9,6 +9,7 @@ from bs4 import BeautifulSoup
 from urllib.request import Request, urlopen
 import numpy
 import pandas as pd
+import matplotlib.pyplot as plt
 
 logging.basicConfig(level=logging.ERROR)
 logger = logging.getLogger(__name__)
@@ -17,20 +18,22 @@ logger.setLevel(logging.ERROR)
 
 def get_users(image):
     # load the image as a PIL/Pillow image, apply OCR
-    text = pytesseract.image_to_string(image)
+    text = pytesseract.image_to_string(image) #, config="-c load_freq_dawg=3")
     users = []
-    for line in text.splitlines():
+    for line in text.splitlines():  # tokenize (1 user per line)
         logger.debug("Found line %s" % line)
-        user = re.sub("^.*:", "", line).strip()
-        logger.info("Found user <%s>" % user)
+        user = re.sub("^.*:", "", line).strip()     # drop team prefix (...:)
+        user = user.encode('ascii', 'ignore').decode('ascii').strip()   # strip non-ascii chars (creates problems opening url)
 
         if user:  # skip empty users
+            logger.info("Found user <%s>" % user)
             users.append(user)
 
     return users
 
 
 def clean_image(image, preprocess):
+
     # convert to grayscale
     clean = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
@@ -42,10 +45,16 @@ def clean_image(image, preprocess):
     elif preprocess == "blur":
         clean = cv2.medianBlur(clean, 3)
 
+    # black on white gives better results with tesseract
+    clean = cv2.bitwise_not(clean)
+
+    # add a white border (to help tesseract)
+    border = 10
+    clean = cv2.copyMakeBorder(clean, border, border, border, border, cv2.BORDER_CONSTANT, None, [255,255,255])
+
     # show the output image
     # cv2.imshow("Image", image)
-    # cv2.imshow("Output", clean)
-    # cv2.waitKey(0)
+    cv2.imshow("Output", clean)
 
     return clean
 
@@ -59,7 +68,7 @@ def get_stats(user, url):
 
     # print(raw)
 
-    # find the section in the page starting "BedWars"
+    # find the section in the page between "BedWars" and "SkyWars"
     regex = re.compile("%s.*%s" % ("BedWars", "SkyWars"), flags=re.DOTALL)
     results = regex.search(raw)
 
@@ -82,6 +91,16 @@ def get_stats(user, url):
     logger.debug(stats_dict)
 
     return stats_dict
+
+
+def plot_table(df):
+    fig = plt.figure()
+    plt.subplot(121)
+    plt.table(cellText=df.values, colLabels=df.columns, loc='center')
+    plt.axis('off')
+    plt.axis('tight')
+    fig.tight_layout()
+    plt.show()
 
 
 if __name__ == '__main__':
@@ -124,18 +143,25 @@ if __name__ == '__main__':
     logger.info(all_stats)
 
     # strip out the column names
-    df_columns = []
+    df_columns = ["Wins", "Kills", "Games", "Beds destroyed", "Deaths", "K/D"]
     df_data = {}
     for user, stats in all_stats.items():
         if stats.keys():
             logger.debug("Adding user %s: %s" % (user, stats))
-            df_columns = list(stats.keys())
-            logger.debug("Columns = %s" % df_columns)
+            #df_columns = list(stats.keys())
+            #logger.debug("Columns = %s" % df_columns)
             user_data = list(stats.values())
             user_data.append(round(int(stats["Kills"]) / int(stats["Deaths"]), 2))
+            # df_columns.append("K/D")
             df_data[user] = user_data
+        else:
+            logger.debug("Adding unknown user %s" % user)
+            df_data[user] = [None] * len(df_columns)
 
     logger.debug(df_data)
-    df_columns.append("K/D")
-    df = pd.DataFrame.from_dict(df_data, orient="index", columns=df_columns)
+    df = pd.DataFrame.from_dict(df_data, orient="index", columns=df_columns).sort_values(df_columns[len(df_columns) - 1])
     print(df)
+
+    #plot_table(df)
+
+    cv2.waitKey(0)
