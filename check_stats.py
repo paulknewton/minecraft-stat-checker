@@ -9,14 +9,14 @@ from statistics import MinecraftStats
 
 logging.basicConfig(level=logging.ERROR)
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.ERROR)
+logger.setLevel(logging.DEBUG)
 
 if __name__ == '__main__':
 
     # read command-line args
     parser = argparse.ArgumentParser(
         description="check_stats")
-    parser.add_argument("-iu", "--url", help="URL to retrieve statistics (will append user)")
+    parser.add_argument("-u", "--url", help="URL to retrieve statistics (will append user)")
     parser.add_argument("-i", "--input", help="screenshot of minecraft players")
     parser.add_argument("-p", "--preprocess", type=str, default="blur",
                         help="preprocessing method that is applied to the raw")
@@ -39,13 +39,11 @@ if __name__ == '__main__':
     print("Users: ", users)
 
     # get the stats
-    if arg.url:
-        stats_src = MinecraftStats(args.url)
+    if args.url:
+        stats_reader = MinecraftStats(args.url)
     else:
-        stats_src = MinecraftStats()
-    stats = stats_src.get_stats_df(users)
+        stats_reader = MinecraftStats()
+    stats = stats_reader.get_stats_df(users)
     print(stats)
 
-    # plot_table(df)
-
-    cv2.waitKey(0)
+    stats_reader.plot_table(stats)

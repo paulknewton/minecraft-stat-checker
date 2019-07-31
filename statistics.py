@@ -6,6 +6,7 @@ import logging
 import pandas as pd
 
 logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
 
 
 class MinecraftStats:
@@ -46,6 +47,7 @@ class MinecraftStats:
         results = regex.search(raw)
 
         if not results:
+            logger.debug("Did not find results")
             return {}
 
         stats_text = results.group()
@@ -92,8 +94,15 @@ class MinecraftStats:
     @staticmethod
     def plot_table(df):
         import seaborn as sns
+        sns.set(style="darkgrid")
         import matplotlib.pyplot as plt
+        from matplotlib.colors import ListedColormap
 
+        df = df.apply(pd.to_numeric)
         plt.figure(facecolor='w', edgecolor='k')
-        sns.heatmap(df.head(), annot=True, cmap='viridis', cbar=False)
+        #sns.heatmap(df, annot=True, cmap=ListedColormap(['white']), cbar=False, fmt='g')
+        sns.heatmap(df, annot=True, cmap="Blues", cbar=False, fmt='g', linewidths=3)
+        plt.yticks(rotation=0)
+        plt.tight_layout()
+        print(df)
         plt.show()

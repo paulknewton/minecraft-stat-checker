@@ -78,4 +78,4 @@ def test_multi_lookup(mock_read_stats_as_text, grammatik):
     stats_df = stats_reader.get_stats_df(users)
     assert stats_df.equals(multi_df)
 
-    #stats_reader.plot_table(stats_df)
+    stats_reader.plot_table(stats_df)
