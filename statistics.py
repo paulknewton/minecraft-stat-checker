@@ -104,5 +104,5 @@ class MinecraftStats:
         sns.heatmap(df, annot=True, cmap="Blues", cbar=False, fmt='g', linewidths=3)
         plt.yticks(rotation=0)
         plt.tight_layout()
-        print(df)
+        plt.savefig("stats.png", bbox_inches='tight')
         plt.show()
