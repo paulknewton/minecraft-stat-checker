@@ -32,7 +32,7 @@ if __name__ == '__main__':
         raw.save("screenshot.png")
         raw = cv2.cvtColor(numpy.array(raw), cv2.COLOR_RGB2BGR)
 
-    image_rdr = MinecraftScreenReader(raw, filter=args.preprocess, show=True)
+    image_rdr = MinecraftScreenReader(raw, filter=args.preprocess, show=False)
 
     # extract the users
     users = image_rdr.get_users()
