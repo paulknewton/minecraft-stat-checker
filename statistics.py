@@ -14,7 +14,7 @@ logger.setLevel(logging.DEBUG)
 
 class MinecraftStats:
     """
-    Service for retrieving Miencraft statistics for users.
+    Service for retrieving Minecraft statistics for users.
     """
 
     def __init__(self, url="https://www.gommehd.net/player/index?playerName="):
