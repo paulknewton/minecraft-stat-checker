@@ -1,3 +1,6 @@
+"""
+Module to create statistics for users
+"""
 import re
 from urllib.request import Request, urlopen
 from bs4 import BeautifulSoup
@@ -10,12 +13,26 @@ logger.setLevel(logging.DEBUG)
 
 
 class MinecraftStats:
+    """
+    Service for retrieving Miencraft statistics for users.
+    """
 
     def __init__(self, url="https://www.gommehd.net/player/index?playerName="):
+        """
+        Constructor
+        
+        @param url: the url to be used to download statistics for a user
+        """
         self.url = url  # url used to retrieve statistics
 
     def get_stats(self, users):
-
+        """
+        Get the statistics for (1 or more) users.
+        
+        @param: user a single user string, or a list of user strings
+        @return: a dictionary of statistics. 1 entry per user of the form
+        'User': {'Wins': '391', 'Kills': '1259', 'Games': '1069', 'Beds destroyed': '725', 'Deaths': '712'}
+        """
         if type(users) is not list: users = [users]  # process 1 or more users
 
         # get the user_stats for each user (as a dict of dicts) and build a dataframe
@@ -27,6 +44,12 @@ class MinecraftStats:
         # return self.convert_to_df(all_stats)
 
     def _read_stats_as_text(self, url):
+        """
+        Get statistics for a user from the service and convert them to text
+        
+        @param url: the url to open. This is derived from the url that was used during instantiation, but includes the user
+        @returns: the free text containing statistics (and potentially a lot else besides)
+        """
         req = Request(url, headers={'User-Agent': 'Mozilla/5.0'})
         html = urlopen(req).read()
         text = BeautifulSoup(html).get_text()
@@ -36,6 +59,12 @@ class MinecraftStats:
         return text
 
     def _get_stats_for_user(self, user):
+        """
+        Get the statistics for a given user. Raw statistics text is extracted via the _read_stats_as_text method. Actual statistics are extracted using regular expressions.
+        
+        @param user: the user
+        @returns: a dictionary of statistics of the form 'User': {'Wins': '391', 'Kills': '1259', 'Games': '1069', 'Beds destroyed': '725', 'Deaths': '712'}
+        """
         user_url = self.url + user
         logger.debug("Opening %s" % user_url)
 
@@ -68,7 +97,12 @@ class MinecraftStats:
         return stats_dict
 
     def get_stats_df(self, users):
-
+        """        
+        Get the statistics for (1 or more) users as a pandas dataframe.
+        
+        @param: user a single user string, or a list of user strings
+        @return: a dataframe of statistics with columns 'Wins', 'Kills', 'Games', 'Beds destroyed', 'Deaths', 'K/D'
+        """
         all_stats = self.get_stats(users)
 
         # strip out the column names
@@ -93,6 +127,11 @@ class MinecraftStats:
 
     @staticmethod
     def plot_table(df):
+        """
+        Static method to display a statistics dataframe (returned by the get_stats_df method. Table shown as a grid using the seaborn heatmap feature
+        
+        @param df: the dataframe to display
+        """
         import seaborn as sns
         sns.set(style="darkgrid")
         import matplotlib.pyplot as plt
