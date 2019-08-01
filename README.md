@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/paulknewton/minecraft-stat-checker.svg?branch=master)](https://travis-ci.org/paulknewton/minecraft-stat-checker)
 # minecraft-stat-checker
 Tools to automatically check Minecraft statistics of players.
 
