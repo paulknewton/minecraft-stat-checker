@@ -18,7 +18,7 @@ Let's walk through the scenario:
 
     The tool is launched (usually via a shortcut key). It prompts the user to take a screenshot of the area listing the usernames.
 
-1. Builds the stats
+1. Build the stats
 
     The tool extracts usernames from the image using OCR (via Google Tesseract) and looks up statistics of each user (via online web services). These are displayed as a pop-up window:
 
