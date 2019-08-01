@@ -17,28 +17,27 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(
         description="check_stats")
     parser.add_argument("-u", "--url", help="URL to retrieve statistics (will append user)")
-    parser.add_argument("-i", "--input", help="screenshot of minecraft players")
-    parser.add_argument("-p", "--preprocess", type=str, default="blur",
-                        help="preprocessing method that is applied to the raw")
+    parser.add_argument("-i", "--image", help="screenshot of minecraft players")
+    parser.add_argument("-f", "--filter", type=str, default="blur",
+                        help="preprocessing method that is applied to the raw image during OCR")
     args = parser.parse_args()
     print(args)
 
-    # load the minecraft screenshot from existing file (if specified) or grab screen
-    if args.input:
-        raw = cv2.imread(args.input)
+    # load the minecraft screenshot from an existing file (if specified) or grab screen
+    if args.image:
+        raw = cv2.imread(args.image)
     else:
         # raw = ImageGrab.grab()
         raw = pyautogui.screenshot()
         raw.save("screenshot.png")
         raw = cv2.cvtColor(numpy.array(raw), cv2.COLOR_RGB2BGR)
 
-    image_rdr = MinecraftScreenReader(raw, filter=args.preprocess, show=False)
-
     # extract the users
+    image_rdr = MinecraftScreenReader(raw, filter=args.filter, show=False)
     users = image_rdr.get_users()
     print("Users: ", users)
 
-    # get the stats
+    # Get the stats. Use the provided url to get stats if provided, otherwise use the default.
     if args.url:
         stats_reader = MinecraftStats(args.url)
     else:
