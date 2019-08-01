@@ -1,3 +1,6 @@
+"""
+Module for extracting text from images
+"""
 import re
 import cv2
 import pytesseract
@@ -7,15 +10,27 @@ logger = logging.getLogger(__name__)
 
 
 class MinecraftScreenReader():
+    """Reader to extract username from a Minecraft screenshot"""
 
     def __init__(self, image, filter="blur", show=False):
+        """
+        Constructor
+        
+        @param image: a CV2 image to process
+        @param filter: optional filter to apply (default blur)
+        @param show: toogle display of the images on/off during processing. Default False (off)
+        """
         self.raw = image
         self.clean = None
         self.filter = filter
         self.show = show
 
     def get_users(self):
-
+        """
+        Extract the users from the image via OCR.
+        
+        @returns: a dictionary of user strings
+        """
         if not self.clean:
             self.clean = self._clean_image()
 
@@ -35,6 +50,12 @@ class MinecraftScreenReader():
         return users
 
     def _clean_image(self):
+        """
+        Process an image prior to OCR.
+        Cleaned image is shown if the class 'show' is enabled.
+        
+        @returns: the processed image
+        """
         if self.show:
             cv2.imshow("Raw Image", self.raw)
             cv2.waitKey(0)
