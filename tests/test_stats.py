@@ -71,6 +71,7 @@ def test_multi_lookup(mock_read_stats_as_text, grammatik):
 
     # check stats
     stats = stats_reader.get_stats(users)
+    assert len(stats) == len(users)
     for user in users:
         assert stats[user] == grammatik[0]["Grammatik"]
 
