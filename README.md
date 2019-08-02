@@ -12,7 +12,7 @@ Let's walk through the scenario:
 
     Minecraft displays the players that are entering a round. This is shown at the top of the screen as list if players/teams:
 
-    ![Screenshot](screenshot.png)
+    ![Screenshot](docs/screenshot.png)
 
 1. Launch the tool
 
@@ -22,7 +22,7 @@ Let's walk through the scenario:
 
     The tool extracts usernames from the image using OCR (via Google Tesseract) and looks up statistics of each user (via online web services). These are displayed as a pop-up window:
 
-    ![Statistics](stats.png)
+    ![Statistics](docs/stats.png)
 
 1. Make the decision. Play or pass?
 
