@@ -42,5 +42,5 @@ python mcstats.py
 
 It supports many command line parameters:
 ```
-python -h mcstats.py
+python mcstats.py -h
 ```
