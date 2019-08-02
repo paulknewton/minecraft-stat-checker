@@ -1,6 +1,8 @@
 [![Build Status](https://travis-ci.org/paulknewton/minecraft-stat-checker.svg?branch=master)](https://travis-ci.org/paulknewton/minecraft-stat-checker)
 # minecraft-stat-checker
-Tools to check Minecraft statistics of players.
+Tools to extract Minecraft player names from screenshots and retrieve player statistics
+
+## What is it...?
 
 Minecraft has a lot of statistics: wins, games, kills, deaths...
 
