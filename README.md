@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/paulknewton/minecraft-stat-checker.svg?branch=master)](https://travis-ci.org/paulknewton/minecraft-stat-checker)
+[![codecov](https://codecov.io/gh/paulknewton/minecraft-stat-checker/branch/master/graph/badge.svg)](https://codecov.io/gh/paulknewton/minecraft-stat-checker)
 
 [![DeepSource](https://static.deepsource.io/deepsource-badge-light.svg)](https://deepsource.io/gh/paulknewton/minecraft-stat-checker/?ref=repository-badge)
 
