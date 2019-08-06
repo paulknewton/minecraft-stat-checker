@@ -134,7 +134,7 @@ class MinecraftStats:
                 # df_columns.append("K/D")
                 df_data[user] = user_data
             else:
-                logger.debug("Adding unknown user %s" % user)
+                logger.debug("Adding unknown user %s", user)
                 df_data[user] = [None] * len(df_columns)
 
         logger.debug(df_data)
