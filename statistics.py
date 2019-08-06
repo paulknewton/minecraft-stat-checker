@@ -24,10 +24,7 @@ class MinecraftStats:
         
         @param url: the url to be used to download statistics for a user
         """
-        if url.lower().startswith('http'):
-            self.url = url
-        else:
-            raise ValueError from None
+        self.url = url
 
     def get_stats(self, users):
         """
@@ -56,7 +53,12 @@ class MinecraftStats:
         @returns: the free text containing statistics (and potentially a lot else besides)
         """
         req = Request(url, headers={'User-Agent': 'Mozilla/5.0'})
-        html = urlopen(req).read()
+
+        if url.lower().startswith('http'):
+            html = urlopen(req).read()
+        else:
+            raise ValueError from None
+
         text = BeautifulSoup(html).get_text()
         # with open("out.txt", "w") as text_file:
         #   text_file.write(text)
