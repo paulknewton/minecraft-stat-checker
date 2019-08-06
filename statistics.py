@@ -150,7 +150,7 @@ class MinecraftStats:
         """
 
         # seaborn heatmap cannot handle empty data
-        if stats.empty or stats.isnull().to_numpy().all():
+        if df.empty or df.isnull().to_numpy().all():
             cv2.imshow("Sorry", cv2.imread(SORRY_IMAGE_FILENAME))
             cv2.waitKey(0)
             return
