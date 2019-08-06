@@ -46,7 +46,22 @@ The main program is mcstats:
 python mcstats.py
 ```
 
-It supports many command line parameters:
+It supports different command line parameters:
 ```
 python mcstats.py -h
+
+usage: mcstats.py [-h] [--url URL] [--image IMAGE] [--filter FILTER]
+
+check_stats
+
+optional arguments:
+  -h, --help       show this help message and exit
+  --url URL        URL to retrieve statistics (will append user)
+  --image IMAGE    screenshot of minecraft players
+  --filter FILTER  preprocessing method that is applied to the raw image
+                   during OCR
 ```
+
+By default, the tool takes the input from the clipboard, unless given a file via the `--image` parameter.
+A default statistics service will retrieve figures for each user, but can be overridden by the `--url`parameter.
+Different filtering algorithms can be used to tune the OCR character recognition (thresh or blur). Default: blur.
