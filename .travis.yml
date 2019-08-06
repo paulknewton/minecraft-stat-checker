@@ -17,4 +17,5 @@ install:
   - pip install coverage
   - pip install -r requirements.txt
 script:
-  - python -m pytest tests
+#  - python -m pytest tests
+  - coverage -m pytest tests
