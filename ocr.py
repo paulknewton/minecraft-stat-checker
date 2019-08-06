@@ -7,7 +7,7 @@ import pytesseract
 import logging
 
 logger = logging.getLogger(__name__)
-
+logger.setLevel(logging.INFO)
 
 class MinecraftScreenReader():
     """Reader to extract username from a Minecraft screenshot"""
@@ -15,7 +15,7 @@ class MinecraftScreenReader():
     def __init__(self, image, filter="blur", show=False):
         """
         Constructor
-        
+
         @param image: a CV2 image to process
         @param filter: optional filter to apply (default blur)
         @param show: toogle display of the images on/off during processing. Default False (off)
@@ -28,7 +28,7 @@ class MinecraftScreenReader():
     def get_users(self):
         """
         Extract the users from the image via OCR.
-        
+
         @returns: a dictionary of user strings
         """
         if not self.clean:
@@ -53,7 +53,7 @@ class MinecraftScreenReader():
         """
         Process an image prior to OCR.
         Cleaned image is shown if the class 'show' is enabled.
-        
+
         @returns: the processed image
         """
         if self.show:
@@ -82,5 +82,6 @@ class MinecraftScreenReader():
         if self.show:
             cv2.imshow("Clean Image", clean)
             cv2.waitKey(0)
+        #.save("screenshots/clean.png")
 
         return clean

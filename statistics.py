@@ -9,7 +9,7 @@ import logging
 import pandas as pd
 
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
+logger.setLevel(logging.INFO)
 
 
 class MinecraftStats:
@@ -114,7 +114,16 @@ class MinecraftStats:
                 # df_columns = list(stats.keys())
                 # logger.debug("Columns = %s" % df_columns)
                 user_data = list(stats.values())
-                user_data.append(round(int(stats["Kills"]) / int(stats["Deaths"]), 2))
+
+                # calculate the kill ratio
+                kills = int(stats["Kills"])
+                deaths = int(stats["Deaths"])
+                if deaths == 0:
+                    kd = 0
+                else:
+                    kd = round(kills / deaths, 2)
+
+                user_data.append(kd)
                 # df_columns.append("K/D")
                 df_data[user] = user_data
             else:
@@ -135,7 +144,7 @@ class MinecraftStats:
         import seaborn as sns
         sns.set(style="darkgrid")
         import matplotlib.pyplot as plt
-        from matplotlib.colors import ListedColormap
+        #from matplotlib.colors import ListedColormap
 
         df = df.apply(pd.to_numeric)
         plt.figure(facecolor='w', edgecolor='k')
