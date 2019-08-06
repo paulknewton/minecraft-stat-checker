@@ -18,6 +18,7 @@ install:
   - pip install -r requirements.txt
 script:
 #  - python -m pytest tests
-  - coverage -m pytest tests
+  - coverage run -m pytest
+
 after_success:
-  - bash <(curl -s https://codecov.io/bash)
+  - codecov
