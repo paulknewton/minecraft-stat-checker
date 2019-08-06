@@ -4,12 +4,13 @@ Module to create statistics for users
 import re
 from urllib.request import Request, urlopen
 from bs4 import BeautifulSoup
-from matplotlib import pyplot as plt
 import logging
 import pandas as pd
 
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
+logger.setLevel(logging.DEBUG)
+
+SORRY_IMAGE_FILENAME = "sorry.png"
 
 
 class MinecraftStats:
@@ -23,7 +24,10 @@ class MinecraftStats:
         
         @param url: the url to be used to download statistics for a user
         """
-        self.url = url  # url used to retrieve statistics
+        if url.lower().startswith('http'):
+            self.url = url
+        else:
+            raise ValueError from None
 
     def get_stats(self, users):
         """
@@ -33,7 +37,8 @@ class MinecraftStats:
         @return: a dictionary of statistics. 1 entry per user of the form
         'User': {'Wins': '391', 'Kills': '1259', 'Games': '1069', 'Beds destroyed': '725', 'Deaths': '712'}
         """
-        if type(users) is not list: users = [users]  # process 1 or more users
+        if type(users) is not list:
+            users = [users]  # process 1 or more users
 
         # get the user_stats for each user (as a dict of dicts) and build a dataframe
         all_stats = {}
@@ -53,7 +58,7 @@ class MinecraftStats:
         req = Request(url, headers={'User-Agent': 'Mozilla/5.0'})
         html = urlopen(req).read()
         text = BeautifulSoup(html).get_text()
-        #with open("out.txt", "w") as text_file:
+        # with open("out.txt", "w") as text_file:
         #   text_file.write(text)
 
         return text
@@ -66,7 +71,7 @@ class MinecraftStats:
         @returns: a dictionary of statistics of the form 'User': {'Wins': '391', 'Kills': '1259', 'Games': '1069', 'Beds destroyed': '725', 'Deaths': '712'}
         """
         user_url = self.url + user
-        logger.debug("Opening %s" % user_url)
+        logger.debug("Opening %s", user_url)
 
         raw = self._read_stats_as_text(user_url)
         # print(raw)
@@ -110,7 +115,7 @@ class MinecraftStats:
         df_data = {}
         for user, stats in all_stats.items():
             if stats.keys():
-                logger.debug("Adding user %s: %s" % (user, stats))
+                logger.debug("Adding user %s: %s", user, stats)
                 # df_columns = list(stats.keys())
                 # logger.debug("Columns = %s" % df_columns)
                 user_data = list(stats.values())
@@ -141,14 +146,21 @@ class MinecraftStats:
         
         @param df: the dataframe to display
         """
+
+        # seaborn heatmap cannot handle empty data
+        if stats.empty or stats.isnull().to_numpy().all():
+            cv2.imshow("Sorry", cv2.imread(SORRY_IMAGE_FILENAME))
+            cv2.waitKey(0)
+            return
+
         import seaborn as sns
         sns.set(style="darkgrid")
         import matplotlib.pyplot as plt
-        #from matplotlib.colors import ListedColormap
+        # from matplotlib.colors import ListedColormap
 
         df = df.apply(pd.to_numeric)
         plt.figure(facecolor='w', edgecolor='k')
-        #sns.heatmap(df, annot=True, cmap=ListedColormap(['white']), cbar=False, fmt='g')
+        # sns.heatmap(df, annot=True, cmap=ListedColormap(['white']), cbar=False, fmt='g')
         sns.heatmap(df, annot=True, cmap="Blues", cbar=False, fmt='g', linewidths=3)
         plt.yticks(rotation=0)
         plt.tight_layout()

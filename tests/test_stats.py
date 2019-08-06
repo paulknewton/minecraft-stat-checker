@@ -78,3 +78,11 @@ def test_multi_lookup(mock_read_stats_as_text, grammatik):
     # check stats as df
     stats_df = stats_reader.get_stats_df(users)
     assert stats_df.equals(multi_df)
+
+def test_invalid_url():
+    with pytest.raises(ValueError):
+        stats_reader = MinecraftStats("file://this_protocol_not_supported")
+
+    stats_reader = MinecraftStats("https://this_protocol_is_supported")
+
+    stats_reader = MinecraftStats("http://this_protocol_is_supported")

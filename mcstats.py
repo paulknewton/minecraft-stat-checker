@@ -1,6 +1,5 @@
 import argparse
 import logging
-import pandas as pd
 import cv2
 import numpy
 from PIL import ImageGrab
@@ -24,20 +23,17 @@ if __name__ == '__main__':
     args = parser.parse_args()
     print(args)
 
-    # load the minecraft screenshot from an existing file (if specified) or grab screen
+    # load the minecraft screenshot from an existing file (if specified) or take from clipboard
     if args.image:
         raw = cv2.imread(args.image)
     else:
         raw = ImageGrab.grabclipboard()
-        raw.save("screenshots/clipboard.png")
         raw = cv2.cvtColor(numpy.array(raw), cv2.COLOR_RGB2BGR)
 
     # extract the users
     image_rdr = MinecraftScreenReader(raw, filter=args.filter, show=False)
     users = image_rdr.get_users()
     print("Users: ", users)
-
-    #sys.exit(1)
 
     # Get the stats. Use the provided url to get stats if provided, otherwise use the default.
     if args.url:
@@ -47,8 +43,5 @@ if __name__ == '__main__':
     stats = stats_reader.get_stats_df(users)
     print(stats)
 
-    if stats.empty or stats.isnull().to_numpy().all():
-        cv2.imshow("Sorry", cv2.imread("sorry.png"))
-        cv2.waitKey(0)
-    else:
-        stats_reader.plot_table(stats)
+    # display as a grid (via heatmap)
+    stats_reader.plot_table(stats)
