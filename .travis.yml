@@ -18,7 +18,7 @@ install:
   - pip install -r requirements.txt
 script:
 #  - python -m pytest tests
-  - coverage run -m pytest
+  - coverage run -m pytest -k "not test_ocr"
 
 after_success:
   - codecov
