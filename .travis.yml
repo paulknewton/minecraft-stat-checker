@@ -19,5 +19,7 @@ install:
 script:
 #  - python -m pytest tests
   - coverage run -m pytest -k "not test_ocr"
+ignore:
+  - tests/**/*
 after_success:
   - codecov
