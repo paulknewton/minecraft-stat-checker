@@ -6,6 +6,9 @@ import pandas
 
 @pytest.fixture
 def grammatik():
+    """
+    Fixture data for unit tests
+    """
     # test data
     grammatik_dict = {
         'Grammatik': {'Wins': '391', 'Kills': '1259', 'Games': '1069', 'Beds destroyed': '725', 'Deaths': '712'}}
@@ -21,15 +24,27 @@ def grammatik():
     with open("tests/grammatik_stats.txt", "r") as text_file:
         dummy_stats_text = text_file.read()
 
+    # sample stats text data (from a file)
+    with open("tests/grammatik_invalid_stats.txt", "r") as text_file:
+        dummy_invalid_stats_text = text_file.read()
+
+    # dataframe if stats cannot be retrieved
+
     return [
         grammatik_dict,
         grammatik_df,
-        dummy_stats_text
+        dummy_stats_text,
+        dummy_invalid_stats_text
     ]
 
 
 @mock.patch("statistics.MinecraftStats._read_stats_as_text")
 def test_single_lookup(mock_read_stats_as_text, grammatik):
+    """
+    Test lookup of stats for a single user (with dummy statistics service)
+    :param mock_read_stats_as_text: mock stats reading function
+    :param grammatik: fixture data
+    """
     user = next(iter(grammatik[0]))
 
     stats_reader = MinecraftStats()
@@ -46,8 +61,11 @@ def test_single_lookup(mock_read_stats_as_text, grammatik):
 
 @mock.patch("statistics.MinecraftStats._read_stats_as_text")
 def test_multi_lookup(mock_read_stats_as_text, grammatik):
-    user = next(iter(grammatik[0]))
-
+    """
+    Test lookup of stats for multiple users (with dummy statistics service)
+    :param mock_read_stats_as_text: mock stats reading function
+    :param grammatik: fixture data
+    """
     stats_reader = MinecraftStats()
 
     # configure mock class to return hard-coded stats text
@@ -79,9 +97,42 @@ def test_multi_lookup(mock_read_stats_as_text, grammatik):
     stats_df = stats_reader.get_stats_df(users)
     assert stats_df.equals(multi_df)
 
+
 def test_invalid_url(grammatik):
+    """
+    Test lookup with a non-http protocol in the URL
+    :param grammatik: fixture data
+    :return:
+    """
     user = next(iter(grammatik[0]))
 
     with pytest.raises(ValueError):
         stats_reader = MinecraftStats("file://this_protocol_not_supported")
         stats_reader.get_stats(user)
+
+
+@mock.patch("statistics.MinecraftStats._read_stats_as_text")
+def test_invalid_stats(mock_read_stats_as_text, grammatik):
+    """
+    Test lookup of stats where the returned text does not include the required tokens to extract the figures
+    :param mock_read_stats_as_text: mock stats reading function
+    :param grammatik: fixture data
+    """
+    user = next(iter(grammatik[0]))
+
+    stats_reader = MinecraftStats()
+
+    # configure mock class to return hard-coded (invalid) stats text
+    mock_read_stats_as_text.return_value = grammatik[3]
+
+    stats = stats_reader.get_stats(user)
+    assert stats == {'Grammatik': {}}  # no stats
+
+    df_columns = list(grammatik[0][user].keys())
+    df_columns.append("K/D")
+    df_invalid_data = [None] * len(df_columns)
+    grammatik_invalid_df = pandas.DataFrame.from_dict({"Grammatik": df_invalid_data}, orient="index", columns=df_columns)
+    print(grammatik_invalid_df)
+
+    stats_df = stats_reader.get_stats_df(user)
+    assert stats_df.equals(grammatik_invalid_df)

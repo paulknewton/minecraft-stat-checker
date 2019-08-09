@@ -1,11 +1,12 @@
 """
 Module to create statistics for users
 """
-import re
-from urllib.request import Request, urlopen
-from bs4 import BeautifulSoup
 import logging
+import re
+from urllib import request
+import cv2
 import pandas as pd
+from bs4 import BeautifulSoup
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -21,7 +22,7 @@ class MinecraftStats:
     def __init__(self, url="https://www.gommehd.net/player/index?playerName="):
         """
         Constructor
-        
+
         @param url: the url to be used to download statistics for a user
         """
         self.url = url
@@ -29,7 +30,7 @@ class MinecraftStats:
     def get_stats(self, users):
         """
         Get the statistics for (1 or more) users.
-        
+
         @param: user a single user string, or a list of user strings
         @return: a dictionary of statistics. 1 entry per user of the form
         'User': {'Wins': '391', 'Kills': '1259', 'Games': '1069', 'Beds destroyed': '725', 'Deaths': '712'}
@@ -45,37 +46,36 @@ class MinecraftStats:
         return all_stats
         # return self.convert_to_df(all_stats)
 
-    def _read_stats_as_text(self, url):
+    def _read_stats_as_text(self):
         """
         Get statistics for a user from the service and convert them to text
-        
-        @param url: the url to open. This is derived from the url that was used during instantiation, but includes the user
+
         @returns: the free text containing statistics (and potentially a lot else besides)
         """
-        req = Request(url, headers={'User-Agent': 'Mozilla/5.0'})
-
-        if url.lower().startswith('http'):
-            html = urlopen(req).read()
+        if self.url.lower().startswith('http'):
+            req = request.Request(self.url, headers={'User-Agent': 'Mozilla/5.0'})
         else:
             raise ValueError from None
 
-        text = BeautifulSoup(html).get_text()
-        # with open("out.txt", "w") as text_file:
-        #   text_file.write(text)
+        with request.urlopen(req) as resp:
+            text = BeautifulSoup(resp).get_text()
+            # with open("out.txt", "w") as text_file:
+            #   text_file.write(text)
 
-        return text
+            return text
 
     def _get_stats_for_user(self, user):
         """
-        Get the statistics for a given user. Raw statistics text is extracted via the _read_stats_as_text method. Actual statistics are extracted using regular expressions.
-        
-        @param user: the user
-        @returns: a dictionary of statistics of the form 'User': {'Wins': '391', 'Kills': '1259', 'Games': '1069', 'Beds destroyed': '725', 'Deaths': '712'}
+        Get the statistics for a given user. Raw statistics text is extracted via the _read_stats_as_text method.
+        Actual statistics are extracted using regular expressions.
+
+        @param user: the user @returns: a dictionary of statistics of the form 'User': {'Wins': '391',
+        'Kills': '1259', 'Games': '1069', 'Beds destroyed': '725', 'Deaths': '712'}
         """
         user_url = self.url + user
         logger.debug("Opening %s", user_url)
 
-        raw = self._read_stats_as_text(user_url)
+        raw = self._read_stats_as_text()
         # print(raw)
 
         # find the section in the page between "BedWars" and "SkyWars"
@@ -106,7 +106,7 @@ class MinecraftStats:
     def get_stats_df(self, users):
         """        
         Get the statistics for (1 or more) users as a pandas dataframe.
-        
+
         @param: user a single user string, or a list of user strings
         @return: a dataframe of statistics with columns 'Wins', 'Kills', 'Games', 'Beds destroyed', 'Deaths', 'K/D'
         """
@@ -144,7 +144,8 @@ class MinecraftStats:
     @staticmethod
     def plot_table(df):
         """
-        Static method to display a statistics dataframe (returned by the get_stats_df method. Table shown as a grid using the seaborn heatmap feature
+        Static method to display a statistics dataframe (returned by the get_stats_df method. Table shown as a grid
+        using the seaborn heatmap feature
         
         @param df: the dataframe to display
         """

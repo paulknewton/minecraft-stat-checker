@@ -16,7 +16,8 @@ if __name__ == '__main__':
     # read command-line args
     parser = argparse.ArgumentParser(
         description="check_stats")
-    parser.add_argument("--url", help="URL to retrieve statistics (will append user)")
+    parser.add_argument("--url",
+                        help="URL to retrieve statistics (will append user)")
     parser.add_argument("--image", help="screenshot of minecraft players")
     parser.add_argument("--filter", type=str, default="blur",
                         help="preprocessing method that is applied to the raw image during OCR")
@@ -31,7 +32,7 @@ if __name__ == '__main__':
         raw = cv2.cvtColor(numpy.array(raw), cv2.COLOR_RGB2BGR)
 
     # extract the users
-    image_rdr = MinecraftScreenReader(raw, filter=args.filter, show=False)
+    image_rdr = MinecraftScreenReader(raw, image_filter=args.filter)
     users = image_rdr.get_users()
     print("Users: ", users)
 
