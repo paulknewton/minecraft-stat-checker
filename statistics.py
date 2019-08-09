@@ -146,7 +146,7 @@ class MinecraftStats:
         """
         Static method to display a statistics dataframe (returned by the get_stats_df method. Table shown as a grid
         using the seaborn heatmap feature
-        
+
         @param df: the dataframe to display
         """
 

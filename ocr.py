@@ -52,7 +52,7 @@ class MinecraftScreenReader:
         users = []
         for line in text.splitlines():  # tokenize (1 user per line)
             logger.debug("Found line %s", line)
-            user = self._strip_user_from_line(line)
+            user = MinecraftScreenReader._strip_user_from_line(line)
 
             if user:  # skip empty users
                 logger.info("Found user <%s>", user)
@@ -60,7 +60,8 @@ class MinecraftScreenReader:
 
         return users
 
-    def _strip_user_from_line(self, line):
+    @staticmethod
+    def _strip_user_from_line(line):
         # drop team prefix (...:)
         user = re.sub("^.*:", "", line).strip()
 

@@ -18,17 +18,26 @@ def test_empty_image():
 
 
 def test_user_with_whitespace():
+    """
+    Test user extraction logic with trailing whitespace
+    """
     ocr = MinecraftScreenReader(None)
     assert ocr._strip_user_from_line("    user    ") == "user"
 
+
 def test_user_with_teamname():
+    """
+    Test user extraction logic where user contains prefix of the team name
+    """
     ocr = MinecraftScreenReader(None)
     assert ocr._strip_user_from_line("team:user") == "user"
     assert ocr._strip_user_from_line("team: user") == "user"
     assert ocr._strip_user_from_line("team :user") == "user"
     assert ocr._strip_user_from_line("team : user") == "user"
 
-def test_user_with_trailing_v():
-    ocr = MinecraftScreenReader(None)
 
-    assert ocr._strip_user_from_line("user v") == "user"
+def test_user_with_trailing_v():
+    """
+    Test user extraction logic where user has a trailing 'v' (caused by a tick on the screen)
+    """
+    assert MinecraftScreenReader._strip_user_from_line("user v") == "user"
