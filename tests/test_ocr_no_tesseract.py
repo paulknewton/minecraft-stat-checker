@@ -2,7 +2,6 @@
 OCR unit tests that can run without tesseract
 """
 import cv2
-import numpy as np
 from ocr import MinecraftScreenReader
 
 
