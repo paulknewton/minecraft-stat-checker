@@ -16,7 +16,7 @@ def test_ocr():
     users = ocr.get_users()
     assert users == ['_byF3l1lx_', 'Sternlicht', 'dramatc', 'StegobertFanyboy', 'UnwichtigsDing', 'lolmcOO1',
                      'PrestigePrincess',
-                     'ClientKnocki', 'iFrostSupreme', 'Marvin__Lp', 'NQRMAN', 'Grammatik']
+                     'ClientKnocki', 'iFrostSupreme', 'Marvin__Lp', 'NQRMANY', 'NQRMAN', 'Grammatik']
 
 
 def test_blank_image():

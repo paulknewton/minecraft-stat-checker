@@ -9,7 +9,7 @@ import pandas as pd
 from bs4 import BeautifulSoup
 
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
+logger.setLevel(logging.INFO)
 
 SORRY_IMAGE_FILENAME = "sorry.png"
 
@@ -46,14 +46,14 @@ class MinecraftStats:
         return all_stats
         # return self.convert_to_df(all_stats)
 
-    def _read_stats_as_text(self):
+    def _read_stats_as_text(self, user_url):
         """
         Get statistics for a user from the service and convert them to text
 
         @returns: the free text containing statistics (and potentially a lot else besides)
         """
-        if self.url.lower().startswith('http'):
-            req = request.Request(self.url, headers={'User-Agent': 'Mozilla/5.0'})
+        if user_url.lower().startswith('http'):
+            req = request.Request(user_url, headers={'User-Agent': 'Mozilla/5.0'})
         else:
             raise ValueError from None
 
@@ -73,10 +73,11 @@ class MinecraftStats:
         'Kills': '1259', 'Games': '1069', 'Beds destroyed': '725', 'Deaths': '712'}
         """
         user_url = self.url + user
+        logger.info("Retrieving stats for user <%s>", user)
         logger.debug("Opening %s", user_url)
 
-        raw = self._read_stats_as_text()
-        # print(raw)
+        raw = self._read_stats_as_text(user_url)
+        logger.debug(raw)
 
         # find the section in the page between "BedWars" and "SkyWars"
         regex = re.compile("%s.*%s" % ("BedWars", "SkyWars"), flags=re.DOTALL)

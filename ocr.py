@@ -7,7 +7,7 @@ import pytesseract
 import logging
 
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
+logger.setLevel(logging.INFO)
 
 RAW_IMAGE_FILENAME = "screenshots/clipboard.png"
 CLEAN_IMAGE_FILENAME = "screenshots/clean.png"
@@ -52,16 +52,18 @@ class MinecraftScreenReader:
         users = []
         for line in text.splitlines():  # tokenize (1 user per line)
             logger.debug("Found line %s", line)
-            user = MinecraftScreenReader._strip_user_from_line(line)
+            new_users_in_line = MinecraftScreenReader._extract_users_from_line(line)
 
-            if user:  # skip empty users
-                logger.info("Found user <%s>", user)
-                users.append(user)
+            if new_users_in_line:  # skip empty users
+                logger.info("Found users <%s>", new_users_in_line)
+                users = users + new_users_in_line
 
         return users
 
     @staticmethod
-    def _strip_user_from_line(line):
+    def _extract_users_from_line(line):
+        found_users = []
+
         # drop team prefix (...:)
         user = re.sub("^.*:", "", line).strip()
 
@@ -69,10 +71,18 @@ class MinecraftScreenReader:
         user = user.encode('ascii', 'ignore').decode(
             'ascii').strip()
 
-        # TODO remove trailing v as this is used by Minecraft as a marker
-        user = re.sub(" *v$", "", user)
+        if not user:
+            return found_users
 
-        return user
+        found_users.append(user)
+
+        # users ending with Y may have falsely matched a tick. Drop the Y and add it as well (duplicate)
+        if user[-1:] == "Y" and len(user) > 1:
+            user = user[:-1]
+            logger.info("May be false match. Adding user %s", user)
+            found_users.append(user)
+
+        return found_users
 
     def _clean_image(self):
         """

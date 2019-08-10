@@ -21,7 +21,7 @@ def test_user_with_whitespace():
     Test user extraction logic with trailing whitespace
     """
     ocr = MinecraftScreenReader(None)
-    assert ocr._strip_user_from_line("    user    ") == "user"
+    assert ocr._extract_users_from_line("    user    ") == ["user"]
 
 
 def test_user_with_teamname():
@@ -29,14 +29,14 @@ def test_user_with_teamname():
     Test user extraction logic where user contains prefix of the team name
     """
     ocr = MinecraftScreenReader(None)
-    assert ocr._strip_user_from_line("team:user") == "user"
-    assert ocr._strip_user_from_line("team: user") == "user"
-    assert ocr._strip_user_from_line("team :user") == "user"
-    assert ocr._strip_user_from_line("team : user") == "user"
+    assert ocr._extract_users_from_line("team:user") == ["user"]
+    assert ocr._extract_users_from_line("team: user") == ["user"]
+    assert ocr._extract_users_from_line("team :user") == ["user"]
+    assert ocr._extract_users_from_line("team : user") == ["user"]
 
 
-def test_user_with_trailing_v():
+def test_user_with_trailing_y():
     """
-    Test user extraction logic where user has a trailing 'v' (caused by a tick on the screen)
+    Test user extraction logic where user has a trailing 'Y' (caused by a tick on the screen)
     """
-    assert MinecraftScreenReader._strip_user_from_line("user v") == "user"
+    assert MinecraftScreenReader._extract_users_from_line("USERY") == ["USERY", "USER"]
