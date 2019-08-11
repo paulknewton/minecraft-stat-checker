@@ -74,6 +74,9 @@ class MinecraftScreenReader:
         if not user:
             return found_users
 
+        # users ending with <space>v are likely false matches with a tick. Drop the space-v
+        user = re.sub(" *v$", "", user)
+
         found_users.append(user)
 
         # users ending with Y may have falsely matched a tick. Drop the Y and add it as well (duplicate)
