@@ -4,7 +4,7 @@
 [![DeepSource](https://static.deepsource.io/deepsource-badge-light.svg)](https://deepsource.io/gh/paulknewton/minecraft-stat-checker/?ref=repository-badge)
 
 # minecraft-stat-checker
-Tools to extract Minecraft player names from screenshots and retrieve player statistics
+Tools to extract Minecraft player names from screenshots and retrieve player statistics Uses optical character recognition via Google Tesseract, and pandas dataframes for data summaries.
 
 ## What is it...?
 
