@@ -39,7 +39,7 @@ def test_user_with_trailing_y():
     """
     Test user extraction logic where user has a trailing 'Y' (caused by a tick on the screen)
     """
-    assert MinecraftScreenReader._extract_users_from_line("USERY") == ["USERY", "USER"]
+    assert MinecraftScreenReader._extract_users_from_line("usery") == ["usery", "user"]
 
 
 def test_user_with_trailing_v():

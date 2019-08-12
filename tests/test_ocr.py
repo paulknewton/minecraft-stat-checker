@@ -14,9 +14,15 @@ def test_ocr():
     ocr = MinecraftScreenReader(img)
 
     users = ocr.get_users()
-    assert users == ['_byF3l1lx_', 'Sternlicht', 'dramatc', 'StegobertFanyboy', 'UnwichtigsDing', 'lolmcOO1',
-                     'PrestigePrincess',
-                     'ClientKnocki', 'iFrostSupreme', 'Marvin__Lp', 'NQRMANY', 'NQRMAN', 'Grammatik']
+    #assert users == ['_byF3l1lx_', 'Sternlicht', 'dramatc', 'StegobertFanyboy', 'UnwichtigsDing', 'lolmcOO1',
+    #                 'PrestigePrincess',
+    #                 'ClientKnocki', 'iFrostSupreme', 'Marvin__Lp', 'NQRMANY', 'NQRMAN', 'Grammatik']
+    print(users)
+    assert users == ['_byf3l1lx_', 'sternlicht', 'dramatc',
+                     'stegobertfanyboy', 'stegobertfanybo', # OCR adds 2 variations, in case the trailing Y is a tick
+                     'unwichtigsding', 'lolmcoo1', 'prestigeprincess', 'clientknocki', 'ifrostsupreme', 'marvin__lp',
+                     'nqrmany', 'nqrman',    # OCR adds 2 variations, in case the trailing Y is a tick
+                     'grammatik']
 
 
 def test_blank_image():

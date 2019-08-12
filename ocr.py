@@ -64,6 +64,8 @@ class MinecraftScreenReader:
     def _extract_users_from_line(line):
         found_users = []
 
+        line = line.lower()
+
         # drop team prefix (...:)
         user = re.sub("^.*:", "", line).strip()
 
@@ -80,7 +82,7 @@ class MinecraftScreenReader:
         found_users.append(user)
 
         # users ending with Y may have falsely matched a tick. Drop the Y and add it as well (duplicate)
-        if user[-1:] == "Y" and len(user) > 1:
+        if user[-1:] == "y" and len(user) > 1:
             user = user[:-1]
             logger.info("May be false match. Adding user %s", user)
             found_users.append(user)
