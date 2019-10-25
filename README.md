@@ -1,9 +1,9 @@
-[![Build Status](https://travis-ci.org/paulknewton/minecraft_stat_checker.svg?branch=master)](https://travis-ci.org/paulknewton/minecraft_stat_checker)
-[![codecov](https://codecov.io/gh/paulknewton/minecraft_stat_checker/branch/master/graph/badge.svg)](https://codecov.io/gh/paulknewton/minecraft_stat_checker)
-[![pyup](https://pyup.io/repos/github/paulknewton/minecraft_stat_checker/shield.svg)](https://pyup.io/account/repos/github/paulknewton/minecraft_stat_checker)
-[![python3](https://pyup.io/repos/github/paulknewton/minecraft_stat_checker/python-3-shield.svg)](https://pyup.io/account/repos/github/paulknewton/minecraft_stat_checker)
+[![Build Status](https://travis-ci.org/paulknewton/minecraft-stat-checker.svg?branch=master)](https://travis-ci.org/paulknewton/minecraft-stat-checker)
+[![codecov](https://codecov.io/gh/paulknewton/minecraft-stat-checker/branch/master/graph/badge.svg)](https://codecov.io/gh/paulknewton/minecraft-stat-checker)
+[![pyup](https://pyup.io/repos/github/paulknewton/minecraft-stat-checker/shield.svg)](https://pyup.io/account/repos/github/paulknewton/minecraft-stat-checker)
+[![python3](https://pyup.io/repos/github/paulknewton/minecraft-stat-checker/python-3-shield.svg)](https://pyup.io/account/repos/github/paulknewton/minecraft-stat-checker)
 
-[![DeepSource](https://static.deepsource.io/deepsource-badge-light.svg)](https://deepsource.io/gh/paulknewton/minecraft_stat_checker/?ref=repository-badge)
+[![DeepSource](https://static.deepsource.io/deepsource-badge-light.svg)](https://deepsource.io/gh/paulknewton/minecraft-stat-checker/?ref=repository-badge)
 
 # Minecraft Stat Checker
 Tools to extract Minecraft player names from screenshots and retrieve player statistics. Used to assess the level of your opponents before entering the game. Uses optical character recognition via Google Tesseract to extract usernames from images. Statistics retrieved from online Minecraft servers. Data is summarised using pandas dataframes and Seaborn heatmaps.
